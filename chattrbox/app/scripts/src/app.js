@@ -15,8 +15,8 @@ class ChatApp {
 
         socket.init('ws://localhost:3001');
         socket.registerOpenHandler(() => {
-            this.chatForm.init((data) => {
-                let message = new ChatMessage(data);
+            this.chatForm.init((form_input_val) => {
+                let message = new ChatMessage({message:form_input_val});
                 socket.sendMessage(message.serialize());
             });
             socket.registerMessageHandler((data) => {

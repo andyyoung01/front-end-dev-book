@@ -47,7 +47,7 @@ export class ChatList {
             text: m
         }));
         $messageRow.append($message);
-        $(this.listId).append($messageRow);
+        $(this.$list).append($messageRow);
         $messageRow.get(0).scrollIntoView();
     }
 }
