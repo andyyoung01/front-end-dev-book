@@ -1,16 +1,29 @@
 import socket from './ws-client';
+import {
+    ChatForm,
+    ChatList
+} from './dom';
+
+const FORM_SELECTOR = '[data-chat="chat-form"]';
+const INPUT_SELECTOR = '[data-chat="message-input"]';
+const LIST_SELECTOR = '[data-chat="message-list"]';
 
 class ChatApp {
     constructor() {
+        this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
+        this.chatList = new ChatList(LIST_SELECTOR, 'wonderwoman');
+
         socket.init('ws://localhost:3001');
         socket.registerOpenHandler(() => {
-            let message = new ChatMessage({
-                message: 'pow!'
+            this.chatForm.init((form_input_val) => {
+                let message = new ChatMessage({message:form_input_val});
+                socket.sendMessage(message.serialize());
             });
-            socket.sendMessage(message.serialize());
-        });
-        socket.registerMessageHandler((data) => {
-            console.log(data);
+            socket.registerMessageHandler((data) => {
+                console.log(data);
+                let message = new ChatMessage(data);
+                this.chatList.drawMessage(message.serialize());
+            });
         });
     }
 }
